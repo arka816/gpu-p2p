@@ -1,0 +1,50 @@
+.editor_line_marker{
+    width: 100%;
+    margin: 0;
+    display: block;
+    font-family: inherit;
+    position: relative;
+    user-select: none;
+}
+.editor_line_marker span{
+    position: absolute;
+    right: 10px;
+    user-select: none;
+    color: inherit;
+}
+.editor_line_marker i{
+    position: relative;
+    left: 18px;
+    bottom: 2px;
+    font-size: 10px;
+    user-select: none;
+}
+
+
+
+.editor_code_line{
+    position: absolute;
+    left: 0px;
+    min-width: 100%;
+    font-family: inherit;
+    font-size: 16px;
+    display: inline-flex;
+    cursor: text;
+    padding-right: 6px;
+}
+
+#edit_textarea{
+    outline: none;
+    background-color: transparent;
+    position: absolute;
+    width: 2px;
+    border: 0;
+    resize: none;
+    padding: 0;
+    color: white;
+    font-family: inherit;
+    font-size: 16px;
+    overflow: hidden;
+    z-index: 1000;
+    caret-color: rgb(200, 200, 200);
+}

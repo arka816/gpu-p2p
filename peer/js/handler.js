@@ -1,3 +1,5 @@
+'use strict';
+
 function focusLine(e){
     var index = parseInt(e.target.dataset.index);
    
@@ -10,18 +12,7 @@ function focusLine(e){
         input.focus();
         return;
     }
-    let oldMarker = document.getElementById(`editor_line_marker_${cursorLine}`);
-    let oldCodeLine = document.getElementById(`editor_code_line_${cursorLine}`);
-    let newMarker = document.getElementById(`editor_line_marker_${index}`);
-    let newCodeLine = document.getElementById(`editor_code_line_${index}`);
-
-    oldMarker.style.backgroundColor = '#2F3129';
-    oldMarker.style.color = "#808080";
-    oldCodeLine.style.backgroundColor = '#272822';
-
-    newMarker.style.backgroundColor = '#272727';
-    newMarker.style.color = "white";
-    newCodeLine.style.backgroundColor = '#202020';
+    changeLineFocus(cursorLine, index);
 
     cursorLine = index;
     cursorIndex = codeArray[cursorLine].length
@@ -32,11 +23,11 @@ function focusLine(e){
     input.focus();
 }
 
-function focusSpan(line){
-    let oldMarker = document.getElementById(`editor_line_marker_${cursorLine}`);
-    let oldCodeLine = document.getElementById(`editor_code_line_${cursorLine}`);
-    let newMarker = document.getElementById(`editor_line_marker_${line}`);
-    let newCodeLine = document.getElementById(`editor_code_line_${line}`);
+function changeLineFocus(oldline, newline){
+    let oldMarker = $(`#editor_line_marker_${oldline}`)
+    let oldCodeLine = $(`#editor_code_line_${oldline}`)
+    let newMarker = $(`#editor_line_marker_${newline}`);
+    let newCodeLine = $(`#editor_code_line_${newline}`);
 
     oldMarker.style.backgroundColor = '#2F3129';
     oldMarker.style.color = "#808080";
@@ -45,7 +36,6 @@ function focusSpan(line){
     newMarker.style.backgroundColor = '#272727';
     newMarker.style.color = "white";
     newCodeLine.style.backgroundColor = '#202020';
-
 }
 
 function spanCursorHandler(e){
@@ -76,7 +66,7 @@ function spanCursorHandler(e){
     input.style.left = offset + "px";
     input.style.top = lineHeight * line + "px";
     input.focus();
-    focusSpan(line);
+    changeLineFocus(cursorLine, line);
     cursorLine = line;
 }
 
@@ -85,7 +75,6 @@ function inputHandler(e){
     e.target.value = "";
 
     if(c === "\n") return;
-    console.log("inputHandler");
 
     codeArray[cursorLine] = codeArray[cursorLine].splice(cursorIndex, 0, c);
     cursorIndex += 1;
@@ -105,7 +94,6 @@ function inputKeyHandler(e){
     var k = e.keyCode || e.charCode;
     if(k === 13){
         /* Enter key */
-        console.log("enter key")
         let oldMarker = document.getElementById(`editor_line_marker_${cursorLine}`);
         let oldCodeLine = document.getElementById(`editor_code_line_${cursorLine}`);
         oldCodeLine.style.backgroundColor = '#272822';
@@ -192,4 +180,43 @@ function inputKeyHandler(e){
             renderTokens(cursorLine);
         }
     }
+    else if(k === 39){
+        /* Right Arrow Key */
+        if(cursorIndex === codeArray[cursorLine].length){
+            if(cursorLine === lineCount - 1) return;
+            else{
+                cursorLine += 1;
+                cursorIndex = 0;
+                cursorOffset = 0;
+                input.style.top = lineHeight * cursorLine + "px";
+                input.style.left = cursorOffset + "px";
+                changeLineFocus(cursorLine - 1, cursorLine);
+            }
+        }
+        else{
+            cursorIndex += 1;
+            cursorOffset = findWidthofChar(codeArray[cursorLine].slice(0, cursorIndex));
+            input.style.left = cursorOffset + "px";
+        }
+    }
+    else if(k === 37){
+        /* Left Arrow Key */
+        if(cursorIndex === 0){
+            if(cursorLine === 0) return;
+            else{
+                cursorLine -= 1;
+                cursorIndex = codeArray[cursorLine].length;
+                cursorOffset = findWidthofChar(codeArray[cursorLine]);
+                input.style.top = lineHeight * cursorLine + "px";
+                input.style.left = cursorOffset + "px";
+                changeLineFocus(cursorLine + 1, cursorLine);
+            }
+        }
+        else{
+            cursorIndex -= 1;
+            cursorOffset = findWidthofChar(codeArray[cursorLine].slice(0, cursorIndex));
+            input.style.left = cursorOffset + "px";
+        }
+    }
+    input.focus();
 }

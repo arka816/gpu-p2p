@@ -1,3 +1,5 @@
+'use strict';
+
 var lineCount = 10;
 var lineHeight = 20;
 var cursorLine = 0;
@@ -7,8 +9,9 @@ var lineMarkerWrapper, codeWrapper;
 var input;
 var codeArray = [];
 var tokenArray = [];
-var offsetArray = [];
 var textWidthFinder;
+
+var selectionMode = false;
 
 const lexer = new CLexer();
 
@@ -34,6 +37,23 @@ const colorCode = {
     preproc_dir: '#F92665'
 };
 
+document.onselectstart = (e) => {
+    selectionMode = true;
+}
+
+document.onselectionchange = (e) => {
+    if(window.getSelection().toString().length > 0){
+        console.log(selectionMode);
+    }
+}
+
+document.onmouseup = (e) => {
+    if(selectionMode && window.getSelection().toString().length > 0){
+        selectionMode = false;
+        console.log(selectionMode);
+    }
+}
+
 function renderEditor(){
     lineMarkerWrapper = document.getElementById("editor_line_marker_wrapper");
     codeWrapper = document.getElementById('editor_code_wrapper');
@@ -44,7 +64,6 @@ function renderEditor(){
         codeWrapper.appendChild(renderCodeLine(i));
         codeArray.push("");
         tokenArray.push([]);
-        offsetArray.push(0);
     }
     renderTextarea();
 }

@@ -1,3 +1,5 @@
+'use strict';
+
 class CLexer{
     constructor(){
         this.tokens = [];
@@ -11,7 +13,7 @@ class CLexer{
     static preprocessor_directives = ['define', 'include', 'undef', 'ifdef', 'ifndef', 'if', 'else', 'elif', 'endif', 'error', 'pragma'];
     //const escapeseq = ["\n", "\r", "\t", "\b", "\\a", "\\'", "\"", "\\?", "\\", "\f", "\\v", "\\0", "\\nnn", "\\xhh"];
     //const comments = ["//", "*/", "/*"];
-    static libraryFunctions = new Set([
+    /*static libraryFunctions = new Set([
         "abort","abs","acos","asctime","asctime_r","asin","assert","atan","atan2","atexit","atof","atoi","atol","bsearch","btowc",
         "calloc","catclose6","catgets6","catopen6","ceil","clearerr","clock","cos","cosh","ctime","ctime64","ctime_r","ctime64_r",
         "difftime","difftime64","div","erf","erfc","exit","exp","fabs","fclose","fdopen5","feof","ferror","fflush1","fgetc1","fgetpos1",
@@ -36,7 +38,7 @@ class CLexer{
         "wcsrtombs4","wcsspn","wcsstr","wcstod","wcstod32","wcstod64","wcstod128","wcstof","wcstok","wcstol","wcstold","wcstombs",
         "wcstoul","wcsxfrm4","wctob","wctomb","wctrans","wctype4","wcwidth","wmemchr","wmemcmp","wmemcpy","wmemmove","wmemset",
         "wprintf6","wscanf6","y0","y1","yn"
-    ])
+    ])*/
 
     static dualPunctuators = ["(", "{", "["];
     static dualPunctuatorsCounterpart = [")", "}", "]"];
@@ -116,8 +118,8 @@ class CLexer{
                 else if(code.substring(code.length - 2, 2) === "*/") return "multi_line_comment_end";
 
                 if(this.checkIdentifier(code)){
-                    if(CLexer.libraryFunctions.has(code)) return "lib_func";
-                    else if(CLexer.preprocessor_directives.includes(code)) return "preproc_dir";
+                    //if(CLexer.libraryFunctions.has(code)) return "lib_func";
+                    if(CLexer.preprocessor_directives.includes(code)) return "preproc_dir";
                     return "identifier";
                 }
                 else{
